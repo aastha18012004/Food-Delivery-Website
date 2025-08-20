@@ -1,10 +1,29 @@
 import { createContext, useEffect, useState } from "react";
-import { food_list } from "../assets/assets";
+import { getAllFoodItems } from "../services/foodItemService";
 
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
   const [cartItems, setCartItems] = useState({});
+  const [food_list, setFoodList] = useState([]);
+  
+  useEffect(() => {
+    const fetchFoodItems = async () => {
+      try {
+        const response = await getAllFoodItems();
+        const updatedFoodItems = response.data.foodItems.map(item => ({
+          ...item,
+          image: `http://localhost:5000/images/${item.image}` // Prepend base URL
+        }));
+        console.log('Food items fetched:', updatedFoodItems);
+        setFoodList(updatedFoodItems);
+      } catch (error) {
+        console.error('Error fetching food items:', error);
+      }
+    };
+    
+    fetchFoodItems();
+  }, []);
 
   const addToCart = (itemId) => {
     if (!cartItems[itemId]) {
@@ -31,6 +50,7 @@ const StoreContextProvider = (props) => {
 
   const contextValue = {
     food_list,
+    setFoodList,
     cartItems,
     setCartItems,
     addToCart,

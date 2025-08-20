@@ -6,16 +6,17 @@ import Cart from "./pages/Cart/Cart";
 import PlaceOrder from "./pages/PlaceOrder/PlaceOrder";
 import Footer from "./components/Footer/Footer";
 import LoginPopup from "./components/LoginPopup/LoginPopup";
+import AuthContextProvider from "./context/AuthContext";
 
 const App = () => {
 
   const [showLogin,setShowLogin] =useState(false)
 
   return (
-    <>
-    {showLogin?<LoginPopup setShowLogin={setShowLogin}/>:<></>}
+    <AuthContextProvider>
+      {showLogin ? <LoginPopup setShowLogin={setShowLogin}/> : <></>}
       <div className="app">
-        <Navbar setShowLogin= {setShowLogin}/>
+        <Navbar setShowLogin={setShowLogin}/>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Cart" element={<Cart />} />
@@ -23,8 +24,11 @@ const App = () => {
         </Routes>
       </div>
       <Footer />
-    </>
+    </AuthContextProvider>
   );
 };
 export default App;
 
+// to start 
+// cd frontend
+// npm run dev

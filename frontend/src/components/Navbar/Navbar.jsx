@@ -3,11 +3,13 @@ import "./Navbar.css";
 import { assets } from "../../assets/assets";
 import { Link } from 'react-router-dom';
 import { StoreContext } from "../../context/StoreContext";
+import { AuthContext } from "../../context/AuthContext";
 
 const Navbar = ({ setShowLogin }) => {
   const [menu, setMenu] = useState("menu");
 
-  const{getTotalCartAmount}=useContext(StoreContext);
+  const { getTotalCartAmount } = useContext(StoreContext);
+  const { user, logoutUser, isAuthenticated } = useContext(AuthContext);
 
   return (
     <div className="navbar">
@@ -26,7 +28,14 @@ const Navbar = ({ setShowLogin }) => {
             </Link>
           <div className={getTotalCartAmount()===0?"":"dot"}></div>
         </div>
-        <button onClick={() => setShowLogin(true)}>Sign in</button>
+        {isAuthenticated ? (
+          <div className="user-profile">
+            <span>Hello, {user?.name}</span>
+            <button onClick={logoutUser}>Logout</button>
+          </div>
+        ) : (
+          <button onClick={() => setShowLogin(true)}>Sign in</button>
+        )}
       </div>
     </div>
   );
